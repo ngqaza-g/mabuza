@@ -7,7 +7,7 @@ import Register, {action as registerAction} from './pages/Register';
 import Settings from './pages/Settings';
 import ChangePassword from './components/settings_componets/ChangePassword';
 import UserSettings from './components/settings_componets/UserSettings';
-import VehicleRegistration from './pages/VehicleRegistration';
+import VehicleRegistration, { action as vehicleRegistrationAction, loader as vehicleRegistrationLoader} from './pages/VehicleRegistration';
 import AuthoriseDriver from './pages/AuthoriseDriver';
 import DashboardIndex from './components/DashboardIndex';
 
@@ -50,7 +50,9 @@ export default function App(){
                                 <ProtectedRoute>
                                     <VehicleRegistration />
                                 </ProtectedRoute>
-                            )
+                            ),    
+                            action: vehicleRegistrationAction,
+                            loader: vehicleRegistrationLoader,
                         },
                         {
                             path: "authorise_driver",

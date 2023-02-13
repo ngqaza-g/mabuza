@@ -19,7 +19,9 @@ router.get('/', validate_token, (req, res)=>{
 
 router.get('/logout', validate_token, (req, res)=>{
     if(req.user){
+        console.log(req.user)
         res.clearCookie('token');
+        res.send("Logged out");
     }else{
         res.status(400).json({error: "Token Invalid"});
     }

@@ -17,6 +17,7 @@
     "express": "^4.18.2",
     "jsonwebtoken": "^8.5.1",
     "mongoose": "^6.8.4",
+    "mqtt": "^4.3.7",
     "validator": "^13.7.0"
   },
   "devDependencies": {

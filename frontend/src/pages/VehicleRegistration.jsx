@@ -1,4 +1,4 @@
-import { Form, useActionData, useLoaderData } from 'react-router-dom';
+import { Form, useActionData, useLoaderData, Link } from 'react-router-dom';
 import axios from 'axios';
 import { Button, Card, CardActions, CardContent, Typography } from '@mui/material';
 import Box from '@mui/material/Box';
@@ -92,7 +92,11 @@ function RegisteredVehicleCard({make, model, licence_plate_number}){
             <Typography variant="body2" component="p">Licence Plate Number: {licence_plate_number}</Typography>
         </CardContent>
         <CardActions>
-            <Button size="small">Authorised Drivers</Button>
+            <Button size="small">
+                <Link to={`/dashboard/authorised_drivers/${licence_plate_number}`}>
+                    Authorised Drivers
+                </Link>
+            </Button>
         </CardActions>
 
         <CardActions>

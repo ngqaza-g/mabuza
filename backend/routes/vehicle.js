@@ -6,5 +6,6 @@ const router = express.Router();
 
 router.post('/register', validate_token, register);
 router.get('/get_vehicles', [validate_token, get_vehicles]);
+router.get('/get_vehicle/:licence_plate_number', [validate_token, get_vehicles]);
 
 module.exports = router;

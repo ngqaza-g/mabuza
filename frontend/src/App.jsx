@@ -8,7 +8,7 @@ import Settings from './pages/Settings';
 import ChangePassword from './components/settings_componets/ChangePassword';
 import UserSettings from './components/settings_componets/UserSettings';
 import VehicleRegistration, { action as vehicleRegistrationAction, loader as vehicleRegistrationLoader} from './pages/VehicleRegistration';
-import AuthoriseDriver from './pages/AuthoriseDriver';
+import AuthorisedDrivers, {loader as authorised_drivers_loader} from './pages/AuthorisedDrivers';
 import DashboardIndex from './components/DashboardIndex';
 
 export default function App(){
@@ -55,10 +55,11 @@ export default function App(){
                             loader: vehicleRegistrationLoader,
                         },
                         {
-                            path: "authorise_driver",
+                            path: "authorised_drivers/:licence_plate_number",
+                            loader: authorised_drivers_loader,
                             element : (
                                 <ProtectedRoute>
-                                    <AuthoriseDriver />
+                                    <AuthorisedDrivers />
                                 </ProtectedRoute>
                             )
                         },

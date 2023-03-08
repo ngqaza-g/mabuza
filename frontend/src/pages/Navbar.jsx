@@ -34,8 +34,8 @@ const nav_items = [
     <Link style={link_style} to="register_vehicle">
         Register Vehicle
     </Link>,
-    <Link style={link_style} to="authorise_driver">
-        Authorise Driver
+    <Link style={link_style} to="authorised_vehicles">
+        Authorised Vehicles
     </Link> 
 ];
 

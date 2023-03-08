@@ -9,17 +9,29 @@ const get_vehicles = async (req, res)=>{
 
     if(licence_plate_number){
         vehicles = await Vehicle.findVehicleByPlateNumber(licence_plate_number);
-        const drivers = Promise.all(vehicles.drivers.map(async (driver)=> {
-            driver = await User.findById(driver).select({
-                name: 1
+        const drivers = await Promise.all(vehicles.drivers.map(async (driver)=> {
+            driver = await User.findById(driver.driver_id).select({
+                name: 1,
+                username: 1
             });
             return driver;
         }));
 
-        vehicles.drivers = drivers;
+        const { _doc } = {...vehicles};
+        vehicles = {..._doc, drivers};
+        console.log(vehicles);
     }else{
-        vehicles = await Vehicle.findOwnerVehicles(user_id);
+        console.log(req.originalUrl);
+
+        if(req.originalUrl === '/api/vehicle/get_vehicles'){
+            vehicles = await Vehicle.findOwnerVehicles(user_id);
+        }else{
+            vehicles = await Vehicle.findAuthorisedVehicles(user_id);
+        }
     }
+    console.log("Breaker");
+    console.log(vehicles);
+
 
     res.json(vehicles);
 }

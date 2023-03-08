@@ -1,4 +1,4 @@
-import { createBrowserRouter, createRoutesFromElements, Route, RouterProvider } from 'react-router-dom';
+import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 import Root from './pages/Root';
 import ProtectedRoute from './components/ProtectedRoute';
 import Dashboard from './pages/Dashboard';
@@ -8,8 +8,9 @@ import Settings from './pages/Settings';
 import ChangePassword from './components/settings_componets/ChangePassword';
 import UserSettings from './components/settings_componets/UserSettings';
 import VehicleRegistration, { action as vehicleRegistrationAction, loader as vehicleRegistrationLoader} from './pages/VehicleRegistration';
-import AuthorisedDrivers, {loader as authorised_drivers_loader} from './pages/AuthorisedDrivers';
-import DashboardIndex from './components/DashboardIndex';
+import AuthorisedDrivers, {loader as authorised_drivers_loader, action as authorised_drivers_action} from './pages/AuthorisedDrivers';
+import DashboardIndex, {loader as dashboardLoader} from './components/DashboardIndex';
+import AuthorisedVehicles, {loader as authorised_vehicles_loader, action as authorised_vehicles_action} from './pages/AuthorisedVehicles';
 
 export default function App(){
 
@@ -42,7 +43,8 @@ export default function App(){
                     children: [
                         {
                             index: true,
-                            element: <DashboardIndex />
+                            element: <DashboardIndex />,
+                            loader: dashboardLoader
                         },
                         {
                             path: "register_vehicle",
@@ -57,9 +59,20 @@ export default function App(){
                         {
                             path: "authorised_drivers/:licence_plate_number",
                             loader: authorised_drivers_loader,
+                            action: authorised_drivers_action,
                             element : (
                                 <ProtectedRoute>
                                     <AuthorisedDrivers />
+                                </ProtectedRoute>
+                            )
+                        },
+                        {
+                            path: "authorised_vehicles",
+                            loader: authorised_vehicles_loader,
+                            action: authorised_vehicles_action,
+                            element : (
+                                <ProtectedRoute>
+                                    <AuthorisedVehicles />
                                 </ProtectedRoute>
                             )
                         },

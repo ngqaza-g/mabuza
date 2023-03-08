@@ -34,9 +34,9 @@ function Registration(){
 
     if(response){
         if(response.status === 200){
-            make.current.value = undefined;
-            model.current.value = undefined;
-            licence_plate_number.current.value = undefined;
+            make.current.value = "";
+            model.current.value = "";
+            licence_plate_number.current.value = "";
         }
     }
     return <Box maxWidth="450px">
@@ -100,7 +100,9 @@ function RegisteredVehicleCard({make, model, licence_plate_number}){
         </CardActions>
 
         <CardActions>
-            <Button size="small">Remove Vehicle</Button>
+            <Form method='patch'>
+                <Button size="small" name="licence_plate_number" value={licence_plate_number} type="submit">Remove Vehicle</Button>
+            </Form>
         </CardActions>
     </Card>
 </Grid>
@@ -113,7 +115,13 @@ export async function action({request, params}){
     const vehicle = Object.fromEntries(formData);
 
     try{
-        response = await axios.post('/api/vehicle/register', vehicle);
+        if(request.method === "POST"){
+            response = await axios.post('/api/vehicle/register', vehicle);
+        }else if(request.method === "PATCH"){
+            console.log(vehicle);
+            response = await axios.patch('/api/vehicle/delete_vehicle', vehicle);
+            // console.log(res)
+        }
     }catch(error){
         if (error.response) {
             // The request was made and the server responded with a status code

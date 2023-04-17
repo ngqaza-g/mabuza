@@ -10,14 +10,13 @@ import Avatar from '@mui/material/Avatar';
 import NotificationsIcon from '@mui/icons-material/Notifications';
 import Badge from '@mui/material/Badge';
 import MenuIcon from '@mui/icons-material/Menu';
-
 import List from '@mui/material/List';
 import Divider from '@mui/material/Divider';
 import ListItem from '@mui/material/ListItem';
 import ListItemButton from '@mui/material/ListItemButton';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
-import { Menu, MenuItem, IconButton } from '@mui/material';
+import { Menu, MenuItem, IconButton, Modal } from '@mui/material';
 import { Link } from 'react-router-dom';
 import { useAuth } from '../components/AuthContext/Authentication';
 
@@ -42,6 +41,9 @@ const nav_items = [
 export default function Navbar(){
 
     const [anchorEl, setAnchorEl] = useState(null);
+    const [openNotification, setOpen] = useState(false);
+    const handleOpenNotification = () => setOpen(true);
+    const handleCloseNotification = () => setOpen(false);
 
     const { setAuth } = useAuth();
 
@@ -85,7 +87,7 @@ export default function Navbar(){
                     ))}
                 </Box>
 
-                <IconButton color="inherit">
+                <IconButton color="inherit" onClick={handleOpenNotification}>
                     <Badge badgeContent={17} color="error">
                         <NotificationsIcon />
                     </Badge>
@@ -126,5 +128,42 @@ export default function Navbar(){
         </List>
 
         </Drawer>
+
+        <NotificationCenter open={openNotification} handleClose={handleCloseNotification} />
     </Box> 
+}
+
+
+
+function NotificationCenter({open, handleClose}){
+    const style = {
+        position: 'absolute',
+        top: "65px",
+        right: 0,
+        // transform: 'translate(-50%, -50%)',
+        width: 400,
+        bgcolor: 'background.paper',
+        border: '2px solid #fff',
+        boxShadow: 24,
+        p: 3,
+      };
+
+      return <Modal
+                open={open}
+                onClose={handleClose}
+            >
+                <Box sx={style}>
+                    <Box sx={{ textAlign: "center"}}>
+                        <Typography variant="h5" component="h2">
+                            Notification Centre
+                        </Typography>
+
+                    </Box>
+
+                    <Typography id="modal-modal-description" sx={{ mt: 2 }}>
+                    Duis mollis, est non commodo luctus, nisi erat porttitor ligula.
+                    </Typography>
+                </Box>
+            </Modal>
+
 }

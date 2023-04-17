@@ -3,7 +3,7 @@ import axios from 'axios';
 import { Add as AddIcon, Delete, Search } from "@mui/icons-material";
 import { Container, Typography, Box, InputAdornment, IconButton, Fab, Modal, Card, CardMedia, Avatar, Grid, CardActions} from "@mui/material";
 import InputField from "../components/InputField";
-import { useState } from "react";
+import { useRef, useState } from "react";
 import Btn from "../components/Btn";
 import { maxWidth } from "@mui/system";
 
@@ -21,7 +21,7 @@ export default function AuthorisedDrivers(){
     if(response){
         if(response.status === 200){
             vehicle = response.data;
-            console.log(vehicle);
+            // open ? handleClose() : null;
         }
     }
 

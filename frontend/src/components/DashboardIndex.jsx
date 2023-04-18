@@ -1,16 +1,31 @@
+import { useEffect } from 'react';
 import { Grid, Typography, Box } from "@mui/material";
 import { useLoaderData } from "react-router-dom";
 import ActiveDriver from "./ActiveDriver";
 import axios from 'axios';
 import Map from "./Map";
+import { useMqtt } from "./mqttContext";
 
 export default function DashboardIndex(){
     const { data, status } = useLoaderData();
     const cars = status === 200 ? data : null;
+    const mqttClient = useMqtt();
+
+    useEffect(()=>{
+        mqttClient.on('connect', ()=>{
+            mqttClient.subscribe('location');
+        });
+
+        if(cars){
+            mqttClient.on('message', (topic, message)=>{
+                
+            });
+        }
+    }, [mqttClient, cars])
     return cars.length > 0 ? <Grid container spacing={2}>
         <Grid item xs={6}>
             { cars.map(car =>(
-                <ActiveDriver make={car.make} model={car.model} licence_plate_number={car.licence_plate_number}/>
+                <ActiveDriver key={car.licence_plate_number} make={car.make} model={car.model} licence_plate_number={car.licence_plate_number}/>
             ))}
         </Grid>
         <Grid item xs={6}>

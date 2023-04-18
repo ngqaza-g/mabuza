@@ -6,7 +6,8 @@ const register = async (req, res)=>{
         const vehicle = req.body;
 
         try{
-            await Vehicle.create({...vehicle, owner_id});
+            const newVehicle = await Vehicle.create({...vehicle, owner_id});
+            await newVehicle.addDriver(owner_id);
             res.send("Vehicle Successfully registerd");
         }catch(error){
             console.log(error);

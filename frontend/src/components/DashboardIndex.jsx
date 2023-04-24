@@ -4,24 +4,13 @@ import { useLoaderData } from "react-router-dom";
 import ActiveDriver from "./ActiveDriver";
 import axios from 'axios';
 import Map from "./Map";
-import { useMqtt } from "./mqttContext";
+import { useMqtt, useSubscription } from "./mqttContext";
 
 export default function DashboardIndex(){
     const { data, status } = useLoaderData();
     const cars = status === 200 ? data : null;
-    const mqttClient = useMqtt();
 
-    useEffect(()=>{
-        mqttClient.on('connect', ()=>{
-            mqttClient.subscribe('location');
-        });
 
-        if(cars){
-            mqttClient.on('message', (topic, message)=>{
-                
-            });
-        }
-    }, [mqttClient, cars])
     return cars.length > 0 ? <Grid container spacing={2}>
         <Grid item xs={6}>
             { cars.map(car =>(
@@ -31,6 +20,7 @@ export default function DashboardIndex(){
         <Grid item xs={6}>
             <Map />
         </Grid>
+        
     </Grid> :
     <Box sx={{margin :"auto"}}>
         <Typography variant="h3">You have no registered nor authorised vehicles</Typography>

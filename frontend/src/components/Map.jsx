@@ -3,36 +3,65 @@ import Box  from "@mui/material/Box";
 import mapboxgl from 'mapbox-gl';
 import 'mapbox-gl/dist/mapbox-gl.css';
 
+mapboxgl.accessToken = 'pk.eyJ1IjoibmdxYXphLWciLCJhIjoiY2wwZ2xxZW44MDZ3MjNrcTh5b2ZzZmtvbSJ9.vLOYAuYYOkjq-uCI7d5tQA';
 
 
-export default function Map(){
-    const [coords, setCoords] = useState({longitude: 0, latitude: 0});
-    
+export default function Map({car_locations}){
+    const [userLocation, setUserLocation] = useState(null);
+    const [map, setMap ] = useState(null);
+    const mapContainer = useRef(null);
+    // const map = useRef()
 
     useEffect(()=>{
-        navigator.geolocation.getCurrentPosition(successCb, errorCb);
-        mapboxgl.accessToken = 'pk.eyJ1IjoibmdxYXphLWciLCJhIjoiY2wwZ2xxZW44MDZ3MjNrcTh5b2ZzZmtvbSJ9.vLOYAuYYOkjq-uCI7d5tQA';
-        new mapboxgl.Map({
-            container: 'map', // container ID
-            style: 'mapbox://styles/mapbox/streets-v12', // style URL
-            // center: [28.5873, -20.1457,], // starting position [lng, lat]
-            center: [coords.longitude, coords.latitude], // starting position [lng, lat]
-            zoom: 9, // starting zoom
-        });
-    }, [coords]);
+        // navigator.geolocation.getCurrentPosition(successCb, errorCb);
+        if(!map){
+            const newMap = new mapboxgl.Map({
+                container: mapContainer.current,
+                style: 'mapbox://styles/mapbox/streets-v12',
+                center: [0, 0],
+                zoom:9
+            });
+            setMap(newMap);
+        }
+        if(userLocation){
+            const marker = new mapboxgl.Marker().setLngLat(userLocation).addTo(map);
+        }
+    }, [userLocation, map]);
 
 
-    function successCb(position){
-        // console.log(position);
-        const { longitude, latitude } = position.coords;
-        // console.log(position.coords);
-        setCoords({longitude, latitude});
-        console.log(coords);
-    }
 
-    function errorCb(error){
-        console.log(error);
-    }
+    useEffect(()=>{
+        navigator.geolocation.getCurrentPosition( position =>{
+            const {latitude, longitude } = position.coords;
+            const newUserLocation = [longitude, latitude];
+            console.log(newUserLocation);
 
-    return <Box id="map" sx={{maxwidth: "500px", minHeight: "400px", maxHeight: "500px"}}/>
+            setUserLocation(newUserLocation);
+
+            map.setCenter(newUserLocation);
+        },
+        error =>{
+            console.log(error);
+        },
+        {enableHighAccuracy: true}
+        )
+    }, [map])
+
+
+
+
+    // function successCb(position){
+    //     // console.log(position);
+    //     const { longitude, latitude } = position.coords;
+    //     console.log(position.coords);
+    //     console.log(`Longitude: ${longitude}. Latitude: ${latitude}`);
+    //     setCoords(prev =>({longitude, latitude}));
+    //     console.log(coords);
+    // }
+
+    // function errorCb(error){
+    //     console.log(error);
+    // }
+
+    return <Box ref={mapContainer} sx={{maxwidth: "500px", minHeight: "400px", maxHeight: "500px"}}/>
 }

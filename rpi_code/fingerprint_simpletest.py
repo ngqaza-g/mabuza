@@ -2,19 +2,19 @@
 # SPDX-License-Identifier: MIT
 
 import time
-import board
-import busio
-from digitalio import DigitalInOut, Direction
+# import board
+# import busio
+# from digitalio import DigitalInOut, Direction
 import adafruit_fingerprint
 
-led = DigitalInOut(board.D13)
-led.direction = Direction.OUTPUT
+# led = DigitalInOut(board.D13)
+# led.direction = Direction.OUTPUT
 
-uart = busio.UART(board.TX, board.RX, baudrate=57600)
+# uart = busio.UART(board.TX, board.RX, baudrate=57600)
 
 # If using with a computer such as Linux/RaspberryPi, Mac, Windows with USB/serial converter:
-# import serial
-# uart = serial.Serial("/dev/ttyUSB0", baudrate=57600, timeout=1)
+import serial
+uart = serial.Serial("COM3", baudrate=57600, timeout=1)
 
 # If using with Linux/Raspberry Pi and hardware UART:
 # import serial

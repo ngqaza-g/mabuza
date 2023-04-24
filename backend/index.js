@@ -16,7 +16,8 @@ mongoose.set('strictQuery', false);
 mongoose.connect(`mongodb://${process.env.MONGO_DB_URL}/mabuza`, {useNewUrlParser: true,})
 .then(()=>{
     // First Connect to the database the listen for requests.
-    console.log("Connected to the database"); 
+    console.log("Connected to the database");
+    require('./modules/mqttClient'); 
     app.listen(PORT, ()=> console.log(`SERVER STARTED ON PORT ${PORT}`));
 })
 .catch((e)=>{

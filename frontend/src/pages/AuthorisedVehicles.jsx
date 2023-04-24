@@ -1,6 +1,8 @@
 import { Button, Card, CardActions, CardContent, Container, Grid, Typography } from "@mui/material";
 import { Form, useLoaderData } from "react-router-dom";
 import axios from 'axios';
+import { useMqtt } from "../components/mqttContext";
+import { useAuth } from "../components/AuthContext/Authentication";
 
 export default function AuthorisedVehicles(){
     const { data, status } = useLoaderData();
@@ -26,6 +28,9 @@ export default function AuthorisedVehicles(){
 
 
 function VehicleCard({make, model, licence_plate_number, fingerprint_id}){
+    const { mqttClient } = useMqtt(); 
+    const { auth } = useAuth();
+    const { user } = auth;
     return <Grid item xs={6}>
     <Card sx={{maxWidth:"300px"}}>
         <CardContent>
@@ -36,9 +41,9 @@ function VehicleCard({make, model, licence_plate_number, fingerprint_id}){
         {
             fingerprint_id === -1 ? (
                 <CardActions>
-                    <Form method='patch'>
-                        <Button size="small" name="register_fingerprint"ype="submit">Register Fingerprint</Button>
-                    </Form>
+                    <Button size="small" name="register_fingerprint" onClick={()=>{
+                        mqttClient.publish(`register_fingerprint/${licence_plate_number}`, JSON.stringify({driver_id: user.id}) );
+                    }}>Register Fingerprint</Button>
                 </CardActions>
             ) : ""
         }

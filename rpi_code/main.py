@@ -1,14 +1,16 @@
+from car import Car
 from finger_print import Fingerprint
 from db import DB
 import paho.mqtt.client as mqtt
+import concurrent.futures
 import time
 import serial
 import json
 import sys
 
-COM_PORT ="COM3"
+COM_PORT ="COM14"
 BROKER = "127.0.0.1"
-LICENSE_PLATE_NUMBER = "AVF1234"
+LICENSE_PLATE_NUMBER = "ABC1234"
 
 try:
     uart = serial.Serial(COM_PORT, baudrate=57600, timeout=1)
@@ -41,33 +43,15 @@ client.connect(BROKER, 1883, 60)
 client.loop_start()
 
 
-fingerprint_scan_tries = 0
-try:
-    while True:
-        c = input("Press Enter to Start: ")
+car = Car(mqttClient=client, fingerprint=fingerprint)
 
-        if(c == 'c'):
-            fingerprint.clear()
-        else:
-            location = fingerprint.get_fingerprint()
-            if(location):
-                print(location)
-                db = DB('fingerprints.db')
-                driver_id = db.get_driver_id(location)
-                db.close()
-                if(user_id):
-                    print(f"User ID: {driver_id}")
-            else:
-                fingerprint_scan_tries += 1
-                print("Fingerprint not recognised try again")
-                if(fingerprint_scan_tries > 2):
-                    print("Send message to owner")
-
-except KeyboardInterrupt as e:
-    print(e)
-    print("Exiting code.....")
-    client.loop_stop()
-    sys.exit()
+with concurrent.futures.ThreadPoolExecutor() as executor:
+    future = executor.submit(car.start_car)
+    try:
+       future.result()
+    except KeyboardInterrupt as e:
+       print("\nExiting Thread....")
 
 
-    
+print("Exiting code.....")
+client.loop_stop()

@@ -2,7 +2,7 @@ const mqtt = require('mqtt');
 const Vehicle = require('../models/Vehicle');
 
 const mqttClient = mqtt.connect('mqtt://localhost');
-console.log(mqttClient)
+// console.log(mqttClient)
 
 
 mqttClient.on('connect', ()=>{

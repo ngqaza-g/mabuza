@@ -1,6 +1,8 @@
 import { Button, Card, CardActions, CardContent, Container, Grid, Typography } from "@mui/material";
 import { Form, useLoaderData } from "react-router-dom";
 import axios from 'axios';
+import { useMqtt } from "../components/mqttContext";
+import { useAuth } from "../components/AuthContext/Authentication";
 
 export default function AuthorisedVehicles(){
     const { data, status } = useLoaderData();
@@ -12,7 +14,12 @@ export default function AuthorisedVehicles(){
         <Grid container my={5} spacing={3}>
             {cars.length === 0 ? <Typography variant="h5" component="h5" sx={{textAlign: "center"}}>You do not have vehicles you are authorised to drive</Typography>
                 : cars.map(car =>(
-                    <VehicleCard make={car.make} model={car.model} licence_plate_number={car.licence_plate_number} />
+                    <VehicleCard 
+                        make={car.make} 
+                        model={car.model} 
+                        licence_plate_number={car.licence_plate_number} 
+                        fingerprint_id={car.fingerprint_id}
+                    />
                 
             ))}
             </Grid>
@@ -20,7 +27,10 @@ export default function AuthorisedVehicles(){
 }
 
 
-function VehicleCard({make, model, licence_plate_number}){
+function VehicleCard({make, model, licence_plate_number, fingerprint_id}){
+    const { mqttClient } = useMqtt(); 
+    const { auth } = useAuth();
+    const { user } = auth;
     return <Grid item xs={6}>
     <Card sx={{maxWidth:"300px"}}>
         <CardContent>
@@ -28,6 +38,15 @@ function VehicleCard({make, model, licence_plate_number}){
             <Typography variant="subtitle1" component="p">{model}</Typography>
             <Typography variant="body2" component="p">Licence Plate Number: {licence_plate_number}</Typography>
         </CardContent>
+        {
+            fingerprint_id === -1 ? (
+                <CardActions>
+                    <Button size="small" name="register_fingerprint" onClick={()=>{
+                        mqttClient.publish(`register_fingerprint/${licence_plate_number}`, JSON.stringify({driver_id: user.id}) );
+                    }}>Register Fingerprint</Button>
+                </CardActions>
+            ) : ""
+        }
         <CardActions>
             <Form method='patch'>
                 <Button size="small" name="licence_plate_number" value={licence_plate_number} type="submit">Remove Vehicle</Button>

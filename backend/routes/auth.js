@@ -11,7 +11,7 @@ router.get('/', validate_token, (req, res)=>{
     const user = req.user;
     console.log(user);
     if(user){
-        res.json({user: {name: user.name, username: user.username, email: user.email, role: user.role}});
+        res.json({user: {id: user._id, name: user.name, username: user.username, email: user.email, role: user.role}});
     }else{
         res.status(400).json({error : "Invalid Token"});
     }

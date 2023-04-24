@@ -11,7 +11,7 @@ const router = express.Router();
 router.post('/register', validate_token, register);
 router.get('/get_vehicles', [validate_token, get_vehicles]);
 router.get('/get_all_vehicles', [validate_token, get_all_vehicles]);
-router.get('/get_authorised_vehicles', [validate_token, get_vehicles]);
+router.get('/get_authorised_vehicles', [validate_token, get_all_vehicles]);
 router.get('/get_vehicle/:licence_plate_number', [validate_token, get_vehicles]);
 router.post('/add_driver/:licence_plate_number', [validate_token, add_driver]);
 router.patch('/delete_driver/:licence_plate_number', [validate_token, remove_driver]);

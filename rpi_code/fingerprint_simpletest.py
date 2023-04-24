@@ -5,7 +5,11 @@ import time
 # import board
 # import busio
 # from digitalio import DigitalInOut, Direction
+<<<<<<< HEAD
 import adafruit_fingerprint               
+=======
+import adafruit_fingerprint
+>>>>>>> daafe3cd2db1064d483c2c51b20f7b29e2268341
 
 # led = DigitalInOut(board.D13)
 # led.direction = Direction.OUTPUT
@@ -14,7 +18,11 @@ import adafruit_fingerprint
 
 # If using with a computer such as Linux/RaspberryPi, Mac, Windows with USB/serial converter:
 import serial
+<<<<<<< HEAD
 uart = serial.Serial("COM14", baudrate=57600, timeout=1)
+=======
+uart = serial.Serial("COM3", baudrate=57600, timeout=1)
+>>>>>>> daafe3cd2db1064d483c2c51b20f7b29e2268341
 
 # If using with Linux/Raspberry Pi and hardware UART:
 # import serial

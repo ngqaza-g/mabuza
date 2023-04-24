@@ -20,7 +20,7 @@ const login = async (req, res)=>{
             const isPasswordCorrect = await user.checkPassword(password) 
             if(isPasswordCorrect){
                 const token = await user.getToken();
-                res.cookie('token', token, {maxAge: (7 * 24 * 60 * 60 * 1000), httpOnly: true } ).json({user: {name: user.name, username: user.username, email: user.email, role: user.role}});
+                res.cookie('token', token, {maxAge: (7 * 24 * 60 * 60 * 1000), httpOnly: true } ).json({user: {id: user._id, name: user.name, username: user.username, email: user.email, role: user.role}});
             }else{
                 res.status(400).json({error: "Incorrect Password"});
             }

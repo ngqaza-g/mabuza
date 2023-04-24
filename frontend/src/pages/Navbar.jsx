@@ -83,7 +83,7 @@ export default function Navbar(){
 
                 <Box display={{xs : 'none', md: 'flex'}}>
                     {nav_items.map( nav_item => (
-                        <Button color="inherit" my={2} display="block">{nav_item}</Button>
+                        <Button key={Math.floor(Math.random()*100000)} color="inherit" my={2} display="block">{nav_item}</Button>
                     ))}
                 </Box>
 
@@ -117,7 +117,7 @@ export default function Navbar(){
         >
         <List>
         {nav_items.map(list_item => (
-            <ListItem>
+            <ListItem key={Math.floor(Math.random()*100000)} >
                 <ListItemButton>
                     <ListItemText>
                         {list_item}

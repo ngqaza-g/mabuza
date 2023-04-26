@@ -8,6 +8,7 @@ const validate_token = async (req, res, next)=>{
             req.token = token;
             req.user = user;
         }
+        console.log(req.user)
         console.log("Validating Token");
         next();
     }else{

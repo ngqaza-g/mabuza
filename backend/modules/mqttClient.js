@@ -15,7 +15,9 @@ mqttClient.on('connect', ()=>{
 mqttClient.on('message', (topic, message)=>{
     if(topic === "fingerprint_id"){
         const { driver_id, fingerprint_id, license_plate_number } = JSON.parse(message.toString());
-        console.log(driver_id);
+        console.log(`Driver Id: ${driver_id}`);
+        console.log(`Fingerprint ID: ${fingerprint_id}`);
+        console.log.apply(`License Plate Number: ${license_plate_number}`);
     }
 
     if(topic === "recognise_face"){

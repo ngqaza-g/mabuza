@@ -26,6 +26,14 @@ const upload_images = async (req, res)=>{
     const json = JSON.parse(JSON.stringify(labeledFaceDescriptors));
     await FaceDescriptor.create(json);
 
+    fs.rmdir(faceImagesDir, { recursive: true }, (err) => {
+      if (err) {
+        console.error(err);
+      } else {
+        console.log('Directory deleted successfully');
+      }
+    });
+
 
     res.json({msg: "Images Uploaded Sucessfully"});
 }

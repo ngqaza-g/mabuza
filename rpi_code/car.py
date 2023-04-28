@@ -1,5 +1,5 @@
 from db import DB
-form gpiozero import Button
+from gpiozero import Button
 from time import sleep
 
 class Car:
@@ -36,17 +36,22 @@ class Car:
             return False
 
     def start_car(self):
-        if(self.isDriverSeated and not self.isEngineRunning):
-            print("Car Starting")
 
         if(self.isEngineRunning):
             print("Stopping the engine")
-        
+            self.isEngineRunning = False
+        elif(self.isDriverSeated):
+            print("Car Starting")
+            self.isEngineRunning = False
+        else:
+            print("There is no driver on the seat")
     
     def set_driver(self,):
+        print("Driver sat on the seat")
         self.isDriverSeated = True
     
     def reset_driver(self,):
+        print("Driver off the seat")
         self.isDriverSeated = False
 
     def begin(self,):

@@ -8,6 +8,7 @@ const login = require('../modules/auth_modules/login');
 const change_password = require('../modules/auth_modules/change_password');
 const reset_password = require('../modules/auth_modules/reset_password');
 const upload_images = require('../modules/auth_modules/upload_image');
+const FaceDescriptor = require('../models/FaceDescriptor');
 
 const router = express.Router();
 
@@ -27,11 +28,13 @@ const storage = multer.diskStorage({
 
 const upload = multer({storage: storage});
 
-router.get('/', validate_token, (req, res)=>{
+router.get('/', validate_token, async (req, res)=>{
     const user = req.user;
     console.log(user);
     if(user){
-        res.json({user: {id: user._id, name: user.name, username: user.username, email: user.email, role: user.role}});
+        const face_model = await FaceDescriptor.findByUserId(user._id);
+
+        res.json({user: {id: user._id, name: user.name, username: user.username, email: user.email, role: user.role, face_model_available: face_model ? true : false}});
     }else{
         res.status(400).json({error : "Invalid Token"});
     }

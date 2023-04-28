@@ -51,6 +51,7 @@ with concurrent.futures.ThreadPoolExecutor() as executor:
        future.result()
     except KeyboardInterrupt as e:
        print("\nExiting Thread....")
+       executor.shutdownNow()
 
 
 print("Exiting code.....")

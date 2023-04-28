@@ -4,10 +4,11 @@ import { useAuth } from './AuthContext/Authentication';
 export default function ProtectedRoute({children, isProtected = true}){
     const { auth } = useAuth();
 
-    const { status } = auth
+    const { status, user } = auth
 
     console.log("Log in status ", status);
     console.log(`Protected status `, isProtected);
+    console.log(`User: ${user.face_model_available}`);
 
     return isProtected ? (status ? children : <Navigate to="/login" />) : (status ? <Navigate to="/dashboard" /> : children);
 }

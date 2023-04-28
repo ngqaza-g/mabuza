@@ -11,6 +11,7 @@ import VehicleRegistration, { action as vehicleRegistrationAction, loader as veh
 import AuthorisedDrivers, {loader as authorised_drivers_loader, action as authorised_drivers_action} from './pages/AuthorisedDrivers';
 import DashboardIndex, {loader as dashboardLoader} from './components/DashboardIndex';
 import AuthorisedVehicles, {loader as authorised_vehicles_loader, action as authorised_vehicles_action} from './pages/AuthorisedVehicles';
+import ImageUpload, { action as imageUploadAction } from './pages/ImageUpload';
 
 export default function App(){
 
@@ -31,6 +32,13 @@ export default function App(){
                     action: registerAction,
                     element: <ProtectedRoute isProtected={false}>
                         <Register />
+                    </ProtectedRoute>
+                },
+                {
+                    path: 'upload_images',
+                    action: imageUploadAction,
+                    element: <ProtectedRoute isProtected={true}>
+                        <ImageUpload />
                     </ProtectedRoute>
                 },
                 {

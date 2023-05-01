@@ -1,19 +1,17 @@
 import adafruit_fingerprint
-import serial
 import time                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               
 
-class Fingerprint:
-    def __init__(self, PORT):  
-        self.uart = serial.Serial(PORT, baudrate=57600, timeout=1)
+class Fingerprint():
+    def __init__(self, uart):  
         self.finger = adafruit_fingerprint.Adafruit_Fingerprint(uart)
     
                                                                                                                                                                                                           
     def get_location(self,):                     
         location = 1
-        if self.finger.read_templates() != adafruit_fingerprint.OK:
+        if finger.read_templates() != adafruit_fingerprint.OK:
             raise RuntimeError("Failed to read templates")
-        if(len(self.finger.templates) > 0 ):
-            location = self.finger.templates[len(self.finger.templates) -1] + 1
+        if(len(finger.templates) > 0 ):
+            location = finger.templates[len(finger.templates) -1] + 1
         return location                           
 
     def get_fingerprint(self,):                                                                                                                                                                                    
@@ -27,7 +25,7 @@ class Fingerprint:
         print("Searching...")
         if self.finger.finger_search() != adafruit_fingerprint.OK:
             return False
-        return self.finger.finger_id
+        return finger.finger_id
 
 
     def enroll_finger(self,):
@@ -101,12 +99,5 @@ class Fingerprint:
                 print("Other error")
             return False
 
-        return location
-
-    def clear(self,):
-        if self.finger.read_templates() != adafruit_fingerprint.OK:
-            raise RuntimeError("Failed to read templates")
-        if(len(self.finger.templates) > 0 ):
-            for location in self.finger.templates:
-                if self.finger.delete_model(location) == adafruit_fingerprint.OK:
-                    print(f"Deleted template number ${location}")
+        return True
+        

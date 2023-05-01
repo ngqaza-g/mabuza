@@ -55,6 +55,15 @@ export default function Register(){
           />
           <p />
           <TextField
+            id="phone_number"
+            name="phone_number"
+            label="Phone Number"
+            error = {action_data ? (action_data.status === 404): false}
+            helperText = {action_data ? (action_data.status === 404 ? action_data.error : "" ): ""}
+            fullWidth      
+          />
+          <p />
+          <TextField
             id="password"
             name="password"
             label="Password"

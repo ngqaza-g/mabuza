@@ -51,6 +51,17 @@ vehicleSchema.statics.findVehicleByPlateNumber = async function(licence_plate_nu
     return await this.findOne({licence_plate_number});
 }
 
+
+vehicleSchema.methods.updateFingerprintId = async function(driver_id, fingerprint_id){
+    const driver = this.drivers.find(driver =>{
+        return driver.driver_id.equals(driver_id)
+    });
+    console.log(driver)
+    if(!driver) return 
+    driver.fingerprint_id = fingerprint_id;
+    return await this.save();
+}
+
 vehicleSchema.methods.addDriver =  async function(driver_id){
     const driver = await this.drivers.find(driver =>{
         return driver.driver_id.equals(driver_id);

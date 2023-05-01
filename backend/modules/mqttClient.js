@@ -2,28 +2,38 @@ const mqtt = require('mqtt');
 const Vehicle = require('../models/Vehicle');
 const recogniseFace = require('./recognise_face');
 
-const mqttClient = mqtt.connect('mqtt://localhost');
+const mqttClient = mqtt.connect('mqtt://127.0.0.1');
 
 
-mqttClient.on('connect', ()=>{
+mqttClient.on('connect', async()=>{
     console.log("Connected to an MQTT broker");
-    mqttClient.subscribe("fingerprint_id");
+    mqttClient.subscribe("fingerprint_id/#");
     mqttClient.subscribe("recognise_face");
 });
 
 
-mqttClient.on('message', (topic, message)=>{
-    if(topic === "fingerprint_id"){
+mqttClient.on('message', async (topic, message)=>{
+    if(topic.split('/')[0] === "fingerprint_id"){
         const { driver_id, fingerprint_id, license_plate_number } = JSON.parse(message.toString());
+
+        const vehicle = await Vehicle.findVehicleByPlateNumber(license_plate_number);
+        // const vehicle = await Vehicle.updateFingerprintId(license_plate_number, driver_id, fingerprint_id);
+        await vehicle.updateFingerprintId(driver_id, fingerprint_id)
+        console.log(vehicle);
         console.log(`Driver Id: ${driver_id}`);
         console.log(`Fingerprint ID: ${fingerprint_id}`);
         console.log.apply(`License Plate Number: ${license_plate_number}`);
     }
 
     if(topic === "recognise_face"){
-        const image = message.toString();
-        const result = recogniseFace(image);
+        const { image, driver_id, license_plate_number } = JSON.parse(message.toString());
+        // console.log(image);
+        const result = await recogniseFace(image);
         console.log(result);
+
+        label = result._label;
+
+        mqttClient.publish(`face_recognised/${license_plate_number}`, JSON.stringify({isFaceVallid : label === driver_id}))
     }
 })
 

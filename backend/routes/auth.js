@@ -34,7 +34,7 @@ router.get('/', validate_token, async (req, res)=>{
     if(user){
         const face_model = await FaceDescriptor.findByUserId(user._id);
 
-        res.json({user: {id: user._id, name: user.name, username: user.username, email: user.email, role: user.role, face_model_available: face_model ? true : false}});
+        res.json({user: {id: user._id, name: user.name, username: user.username, email: user.email, phone_number : user.phone_number, role: user.role, face_model_available: face_model ? true : false}});
     }else{
         res.status(400).json({error : "Invalid Token"});
     }

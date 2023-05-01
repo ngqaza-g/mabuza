@@ -19,6 +19,11 @@ const userSchema = new mongoose.Schema({
         unique: true,
         validate: [validator.isEmail, 'invalid email']
     },
+    phone_number: {
+        type: String,
+        unique: [true],
+        required: [true, 'Please enter your phone number'],
+    },
     password: {
         type: String,
         required: [true, 'Please enter your password'],
@@ -57,6 +62,7 @@ userSchema.statics.verifyToken = async function(token){
             email: 1,
             username: 1,
             password: 1,
+            phone_number: 1,
             role: 1,
         });
     }catch(error){

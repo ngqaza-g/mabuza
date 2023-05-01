@@ -1,8 +1,9 @@
 import { Button, Card, CardActions, CardContent, Container, Grid, Typography } from "@mui/material";
 import { Form, useLoaderData } from "react-router-dom";
 import axios from 'axios';
-import { useMqtt } from "../components/mqttContext";
+import { useMqtt, useSubscription } from "../components/mqttContext";
 import { useAuth } from "../components/AuthContext/Authentication";
+import { useEffect, useState } from "react";
 
 export default function AuthorisedVehicles(){
     const { data, status } = useLoaderData();
@@ -31,6 +32,20 @@ function VehicleCard({make, model, licence_plate_number, fingerprint_id}){
     const { mqttClient } = useMqtt(); 
     const { auth } = useAuth();
     const { user } = auth;
+    const [ fingerprintId, setFingerprintId ] = useState(fingerprint_id);
+
+    mqttClient.subscribe(`fingerprint_id/${licence_plate_number}`);
+
+    mqttClient.on('message', (t, payload)=>{
+        const message = JSON.parse(payload.toString());
+        console.log(message);
+        setFingerprintId(message.fingerprint_id);
+    });
+
+    const handleClick = ()=>{
+        mqttClient.publish(`register_fingerprint/${licence_plate_number}`, JSON.stringify({driver_id: user.id, phone_number: user.phone_number}) );
+    }
+
     return <Grid item xs={6}>
     <Card sx={{maxWidth:"300px"}}>
         <CardContent>
@@ -39,11 +54,9 @@ function VehicleCard({make, model, licence_plate_number, fingerprint_id}){
             <Typography variant="body2" component="p">Licence Plate Number: {licence_plate_number}</Typography>
         </CardContent>
         {
-            fingerprint_id === -1 ? (
+            fingerprintId === -1 ? (
                 <CardActions>
-                    <Button size="small" name="register_fingerprint" onClick={()=>{
-                        mqttClient.publish(`register_fingerprint/${licence_plate_number}`, JSON.stringify({driver_id: user.id}) );
-                    }}>Register Fingerprint</Button>
+                    <Button size="small" name="register_fingerprint" onClick={handleClick}>Register Fingerprint</Button>
                 </CardActions>
             ) : ""
         }

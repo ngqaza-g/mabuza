@@ -30,7 +30,7 @@ const get_all_vehicles = async (req, res)=>{
 
 
     vehicles = vehicles.filter((obj, index, self)=>{
-        return (index === self.findIndex( t => t.driver_id.equals(obj.driver_id)))
+        return (index === self.findIndex( t => t.licence_plate_number === obj.licence_plate_number))
     });
 
     console.log(vehicles);

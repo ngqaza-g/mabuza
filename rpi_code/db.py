@@ -34,6 +34,14 @@ class DB:
             if(data):
                 return data[0]
             return False
+
+    def get_phone_numbers(self,):
+        with self.conn:
+            self.cursor.execute("SELECT phone_number from fingerprints")
+            data = self.cursor.fetchall()
+            if(data):
+                return data
+            return False
     
     def close(self,):
         self.conn.close()

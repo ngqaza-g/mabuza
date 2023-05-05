@@ -13,7 +13,8 @@ FINGERPRINT_PORT ="/dev/ttyS0"
 GPS_PORT='/dev/ttyAMA1'
 GSM_PORT="/dev/ttyAMA2"
 BROKER = "192.168.137.1"
-LICENSE_PLATE_NUMBER = "ABC1234"
+# BROKER="127.0.0.1"
+LICENSE_PLATE_NUMBER = "AVF1234"
 
 try:   
     fingerprint = Fingerprint(FINGERPRINT_PORT)
@@ -52,9 +53,10 @@ gps = GPS(GPS_PORT, client)
 
 with concurrent.futures.ThreadPoolExecutor() as executor:
     future1 = executor.submit(car.start_car)
-    future2 = excecutor.submit(gps.update_coords)
+    future2 = executor.submit(gps.update_coords, LICENSE_PLATE_NUMBER)
     try:
-       future1.result()
+        future1.result()
+        future2.result()
     except KeyboardInterrupt as e:
        print("\nExiting Thread....")
     except Exception as e:

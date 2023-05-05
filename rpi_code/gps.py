@@ -11,20 +11,22 @@ class GPS:
         self.latitude = 0
         self.longitude = 0
 
-    def update_coords(self):
+    def update_coords(self, license_plate_number):
         last_print = time.monotonic()
         while True:
             self.gps.update()
             current = time.monotonic()
             if current - last_print > 1:
+                # self.latitude = -20.1457
+                # self.longitude = 28.5873
                 if not self.gps.has_fix:
                     print("GPS waiting for fix")
                     continue
 
                 self.longitude = self.gps.longitude
                 self.latitude = self.gps.latitude
-                self.mqttClient.publish("location", json.dumps({"longitude": self.longitude, "latitude": self.latitude}))
-                print("Longitude: {longitude} \nLatitude: {latitude}")
+                self.mqttClient.publish(f"location/{license_plate_number}", json.dumps({"coords": {"longitude": self.longitude, "latitude": self.latitude}, "license_plate_number":license_plate_number}))
+                print(f"Longitude: {self.longitude} \nLatitude: {self.latitude}")
 
     def get_coords(self):
         return {"longitude": self.longitude, "latitude": self.latitude}

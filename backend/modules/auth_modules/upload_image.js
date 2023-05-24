@@ -12,30 +12,35 @@ const upload_images = async (req, res)=>{
     const images = fs.readdirSync(faceImagesDir);
 
     const faceDescriptors = [];
-    for (const image of images) {
-        const imagePath = path.join(faceImagesDir, image);
-        const img = await canvas.loadImage(imagePath);
-        const detections = await faceapi.detectSingleFace(img)
-          .withFaceLandmarks()
-          .withFaceDescriptor();
-        faceDescriptors.push(detections.descriptor);
-    }
-    
-    const labeledFaceDescriptors = new faceapi.LabeledFaceDescriptors(_id.toString(), faceDescriptors);
-    console.log(labeledFaceDescriptors); 
-    const json = JSON.parse(JSON.stringify(labeledFaceDescriptors));
-    await FaceDescriptor.create(json);
 
-    fs.rm(faceImagesDir, { recursive: true }, (err) => {
-      if (err) {
-        console.error(err);
-      } else {
-        console.log('Directory deleted successfully');
+    try{
+      for (const image of images) {
+          const imagePath = path.join(faceImagesDir, image);
+          const img = await canvas.loadImage(imagePath);
+          const detections = await faceapi.detectSingleFace(img)
+            .withFaceLandmarks()
+            .withFaceDescriptor();
+          faceDescriptors.push(detections.descriptor);
       }
-    });
-
-
-    res.json({msg: "Images Uploaded Sucessfully"});
+      
+      const labeledFaceDescriptors = new faceapi.LabeledFaceDescriptors(_id.toString(), faceDescriptors);
+      console.log(labeledFaceDescriptors); 
+      const json = JSON.parse(JSON.stringify(labeledFaceDescriptors));
+      await FaceDescriptor.create(json);
+  
+      fs.rm(faceImagesDir, { recursive: true }, (err) => {
+        if (err) {
+          console.error(err);
+        } else {
+          console.log('Directory deleted successfully');
+        }
+      });
+      res.json({msg: "Images Uploaded Sucessfully"});
+    }catch(e){
+      console.log("An error occured while training face recognition model")
+      console.log("Use pictures which shows yourface clearly")
+      res.status(400).json({msg : "An error occured while training face recognition model"})
+    }
 }
 
 

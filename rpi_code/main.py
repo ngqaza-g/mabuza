@@ -33,10 +33,12 @@ def on_message(client, userdata, msg):
         message = json.loads(msg.payload)
         driver_id = message["driver_id"]
         phone_number = message["phone_number"]
+        name = message["name"]
+        username = message["username"]
         location = fingerprint.enroll_finger()
         print(location)
         db = DB("fingerprints.db")
-        db.add_fingerprint(driver_id, location, phone_number)
+        db.add_fingerprint(name, username, driver_id, location, phone_number)
         db.close()
         client.publish('fingerprint_id', json.dumps({"fingerprint_id" : location, "driver_id": driver_id, "license_plate_number": LICENSE_PLATE_NUMBER}))
 
@@ -52,7 +54,7 @@ car = Car(mqttClient=client, fingerprint=fingerprint)
 gps = GPS(GPS_PORT, client)
 
 with concurrent.futures.ThreadPoolExecutor() as executor:
-    future1 = executor.submit(car.start_car)
+    future1 = executor.submit(car.begin)
     future2 = executor.submit(gps.update_coords, LICENSE_PLATE_NUMBER)
     try:
         future1.result()

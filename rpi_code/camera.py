@@ -18,7 +18,7 @@ class Camera:
 
         self.mqttClient = mqttClient
     
-    def recognise_face(self, driver_id):
+    def recognise_face(self, driver_id, license_plate_number):
         start_time = time.time()
         while True:
             im = self.picam.capture_array()
@@ -32,18 +32,15 @@ class Camera:
                 retval, buffer = cv2.imencode('.jpg', image)
                 base64_image = base64.b64encode(buffer).decode('utf-8')
                 self.mqttClient.publish('recognise_face',json.dumps({"image" : base64_image, "driver_id" : driver_id}))
+                self.mqttClient.subscribe(f'face_recognised/{license_plate_number}');
                 print(base64_image)
+                return True
 
-            if time.time() - start_time >= 20 and len(faces) <= 0:
+            if time.time() - start_time >= 20:
                 return False
-
-            cv2.imshow("Camera", im)
-            if cv2.waitKey(1) == ord('q'):
-                break
-        
-        cv2.destroyAllWindows()
-
-
-cam = Camera(None)
-
-cam.recognise_face(None)
+    
+    def get_image(self, licence_plate_number):
+        image = self.picam.capture_array()
+        retval, buffer = cv2.imencode('.jpg', image)
+        base64_image = base64.b64encode(buffer).decode('utf-8')
+        self.mqttClient.publish('image',json.dumps({"image" : base64_image, "licence_plate_number" : licence_plate_number}))

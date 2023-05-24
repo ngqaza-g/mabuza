@@ -1,9 +1,11 @@
+from rpi_lcd import LCD
 import adafruit_fingerprint
 import serial
 import time                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               
 
 class Fingerprint:
     def __init__(self, PORT):  
+        self.lcd = LCD()
         self.uart = serial.Serial(PORT, baudrate=57600, timeout=1)
         self.finger = adafruit_fingerprint.Adafruit_Fingerprint(uart)
     
@@ -19,6 +21,8 @@ class Fingerprint:
     def get_fingerprint(self,):                                                                                                                                                                                    
         """Get a finger print image, template it, and see if it matches!"""
         print("Waiting for image...")
+        self.lcd.clear()
+        self.lcd.text("Scan Finger", 1)
         while self.finger.get_image() != adafruit_fingerprint.OK:
             pass
         print("Templating...")
@@ -27,6 +31,9 @@ class Fingerprint:
         print("Searching...")
         if self.finger.finger_search() != adafruit_fingerprint.OK:
             return False
+        self.lcd.clear()
+        self.lcd.text("Scan", 1)
+        self.lcd.text("Successful", 2)
         return self.finger.finger_id
 
 
@@ -39,7 +46,12 @@ class Fingerprint:
         for fingerimg in range(1, 3):
             if fingerimg == 1:
                 print("Place finger on sensor...", end="")
+                self.lcd.clear()
+                self.lcd.text("Scan Finger", 1)
             else:
+                self.lcd.clear()
+                self.lcd.text("Scan same", 1)
+                slef.lcd.text("Finger again")
                 print("Place same finger again...", end="")
 
             while True:
@@ -51,9 +63,15 @@ class Fingerprint:
                     print(".", end="")
                 elif i == adafruit_fingerprint.IMAGEFAIL:
                     print("Imaging error")
+                    self.lcd.clear()
+                    self.lcd.text("Enrol Failed", 1)
+                    self.lcd.text("Try again", 2)
                     return False
                 else:
                     print("Other error")
+                    self.lcd.clear()
+                    self.lcd.text("Enrol Failed", 1)
+                    self.lcd.text("Try again", 2)
                     return False
 
             print("Templating...", end="")
@@ -69,10 +87,18 @@ class Fingerprint:
                     print("Image invalid")
                 else:
                     print("Other error")
+                
+                    
+                self.lcd.clear()
+                self.lcd.text("Enrol Failed", 1)
+                self.lcd.text("Try again", 2)
+
                 return False
 
             if fingerimg == 1:
                 print("Remove finger")
+                self.lcd.clear()
+                self.lcd.text("Remove finger")
                 time.sleep(1)
                 while i != adafruit_fingerprint.NOFINGER:
                     i = self.finger.get_image()
@@ -86,12 +112,17 @@ class Fingerprint:
                 print("Prints did not match")
             else:
                 print("Other error")
+            self.lcd.clear()
+            self.lcd.text("Enrol Failed", 1)
+            self.lcd.text("Try again", 2)
             return False
 
         print("Storing model #%d..." % location, end="")
         i = self.finger.store_model(location)
         if i == adafruit_fingerprint.OK:
             print("Stored")
+            self.lcd.clear()
+            self.lcd.text("Enrol Success")
         else:
             if i == adafruit_fingerprint.BADLOCATION:
                 print("Bad storage location")

@@ -50,8 +50,8 @@ client.connect(BROKER, 1883, 60)
 client.loop_start()
 
 
-car = Car(mqttClient=client, fingerprint=fingerprint)
 gps = GPS(GPS_PORT, client)
+car = Car(mqttClient=client, fingerprint=fingerprint, get_coords=gps.get_coords, license_plate_number=LICENSE_PLATE_NUMBER)
 
 with concurrent.futures.ThreadPoolExecutor() as executor:
     future1 = executor.submit(car.begin)

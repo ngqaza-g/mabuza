@@ -14,7 +14,7 @@ export default function DashboardIndex(){
     const { auth } = useAuth();
     const { user } = auth;
     
-    return user.face_model_available ? (cars.length > 0 ? <Grid container spacing={2}>
+    return (cars.length > 0 ? <Grid container spacing={2}>
         <Grid item xs={6}>
             { cars.map(car =>(
                 <ActiveDriver key={car.licence_plate_number} make={car.make} model={car.model} licence_plate_number={car.licence_plate_number}/>
@@ -27,7 +27,7 @@ export default function DashboardIndex(){
     </Grid> :
     <Box sx={{margin :"auto"}}>
         <Typography variant="h3">You have no registered nor authorised vehicles</Typography>
-    </Box>): <Navigate to="/upload_images" />
+    </Box>)
 }
 
 

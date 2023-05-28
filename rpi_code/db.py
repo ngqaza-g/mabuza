@@ -24,7 +24,7 @@ class DB:
 
     def add_fingerprint(self, name, username, driver_id, fingerprint_id, phone_number):
         with self.conn:
-            self.cursor.execute("INSERT INTO fingerprints VALUES (:driver_id, :name, :username :fingerprint_id, :phone_number)", {"driver_id": driver_id, "fingerprint_id": fingerprint_id, "phone_number": phone_number, "name": name, "username": username})
+            self.cursor.execute("INSERT INTO fingerprints VALUES (:driver_id, :name, :username, :fingerprint_id, :phone_number)", {"driver_id": driver_id, "fingerprint_id": fingerprint_id, "phone_number": phone_number, "name": name, "username": username})
             
 
     

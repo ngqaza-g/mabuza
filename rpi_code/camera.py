@@ -43,4 +43,5 @@ class Camera:
         image = self.picam.capture_array()
         retval, buffer = cv2.imencode('.jpg', image)
         base64_image = base64.b64encode(buffer).decode('utf-8')
-        self.mqttClient.publish('image',json.dumps({"image" : base64_image, "licence_plate_number" : licence_plate_number}))
+        print("Sending Image")
+        self.mqttClient.publish('image',json.dumps({ "licence_plate_number" : licence_plate_number, "image" : base64_image}))

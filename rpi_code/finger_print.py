@@ -7,7 +7,7 @@ class Fingerprint:
     def __init__(self, PORT):  
         self.lcd = LCD()
         self.uart = serial.Serial(PORT, baudrate=57600, timeout=1)
-        self.finger = adafruit_fingerprint.Adafruit_Fingerprint(uart)
+        self.finger = adafruit_fingerprint.Adafruit_Fingerprint(self.uart)
     
                                                                                                                                                                                                           
     def get_location(self,):                     
@@ -51,7 +51,7 @@ class Fingerprint:
             else:
                 self.lcd.clear()
                 self.lcd.text("Scan same", 1)
-                slef.lcd.text("Finger again")
+                self.lcd.text("Finger again", 2)
                 print("Place same finger again...", end="")
 
             while True:
@@ -98,7 +98,7 @@ class Fingerprint:
             if fingerimg == 1:
                 print("Remove finger")
                 self.lcd.clear()
-                self.lcd.text("Remove finger")
+                self.lcd.text("Remove finger", 1)
                 time.sleep(1)
                 while i != adafruit_fingerprint.NOFINGER:
                     i = self.finger.get_image()
@@ -122,7 +122,7 @@ class Fingerprint:
         if i == adafruit_fingerprint.OK:
             print("Stored")
             self.lcd.clear()
-            self.lcd.text("Enrol Success")
+            self.lcd.text("Enrol Success", 1)
         else:
             if i == adafruit_fingerprint.BADLOCATION:
                 print("Bad storage location")

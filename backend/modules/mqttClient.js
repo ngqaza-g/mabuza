@@ -22,7 +22,7 @@ mqttClient.on('message', async (topic, message)=>{
         console.log(vehicle);
         console.log(`Driver Id: ${driver_id}`);
         console.log(`Fingerprint ID: ${fingerprint_id}`);
-        console.log.apply(`License Plate Number: ${license_plate_number}`);
+        console.log(`License Plate Number: ${license_plate_number}`);
     }
 
     if(topic === "recognise_face"){

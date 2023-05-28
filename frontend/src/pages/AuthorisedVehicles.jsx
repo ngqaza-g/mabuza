@@ -43,7 +43,7 @@ function VehicleCard({make, model, licence_plate_number, fingerprint_id}){
     });
 
     const handleClick = ()=>{
-        mqttClient.publish(`register_fingerprint/${licence_plate_number}`, JSON.stringify({driver_id: user.id, phone_number: user.phone_number}) );
+        mqttClient.publish(`register_fingerprint/${licence_plate_number}`, JSON.stringify({name: user.name, username: user.username, driver_id: user.id, phone_number: user.phone_number}) );
     }
 
     return <Grid item xs={6}>

@@ -1,7 +1,10 @@
 from rpi_lcd import LCD
 import adafruit_fingerprint
 import serial
-import time                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               
+import time
+import os
+
+
 
 class Fingerprint:
     def __init__(self, PORT):  
@@ -140,4 +143,5 @@ class Fingerprint:
         if(len(self.finger.templates) > 0 ):
             for location in self.finger.templates:
                 if self.finger.delete_model(location) == adafruit_fingerprint.OK:
+                    os.remove("fingerprints.db")
                     print(f"Deleted template number ${location}")

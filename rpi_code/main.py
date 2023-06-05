@@ -12,9 +12,10 @@ import sys
 FINGERPRINT_PORT ="/dev/ttyS0"
 GPS_PORT='/dev/ttyAMA1'
 GSM_PORT="/dev/ttyAMA2"
-BROKER = "192.168.137.1"
+ BROKER = "192.168.137.1"
+# BROKER = "192.168.90.51"
 # BROKER="127.0.0.1"
-LICENCE_PLATE_NUMBER = "ABC1234"
+LICENCE_PLATE_NUMBER = "ABD5647"
 
 try:   
     fingerprint = Fingerprint(FINGERPRINT_PORT)
@@ -41,7 +42,7 @@ def on_message(client, userdata, msg):
         db = DB("fingerprints.db")
         db.add_fingerprint(name, username, driver_id, location, phone_number)
         db.close()
-        client.publish('fingerprint_id', json.dumps({"fingerprint_id" : location, "driver_id": driver_id, "license_plate_number": LICENSE_PLATE_NUMBER}))
+        client.publish('fingerprint_id', json.dumps({"fingerprint_id" : location, "driver_id": driver_id, "licence_plate_number": LICENCE_PLATE_NUMBER}))
 
 client = mqtt.Client()
 client.on_connect = on_connect

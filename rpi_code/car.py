@@ -6,6 +6,7 @@ from camera import Camera
 import adafruit_fingerprint
 from rpi_lcd import LCD
 import time
+import requests
 import os
 
 class Car:
@@ -66,6 +67,7 @@ class Car:
                 msg = "There is failed attempt to start your car with an identified fingerprint \n"
                 msg += f"Here is your vehicle's location http://maps.google.com/maps?q={latitude},{longitude}"
                 msg += f"\nLicence Plate: {self.licence_plate_number}"
+                requests.get(f'https://api.callmebot.com/whatsapp.php?phone=263782210526&text={msg}&apikey=6174367')
                 self.buzzer.on()
                 sleep(1)
                 self.buzzer.off()
@@ -139,8 +141,10 @@ class Car:
         coords = self.get_coords()
         latitude = coords["latitude"]
         longitude = coords["longitude"]
+        print("Sending Panic messsage")
         msg = f"Help I am in an emergence.\nHere is my location http://maps.google.com/maps?q={latitude},{longitude}"
         msg += f"\nLicence Plate: {self.licence_plate_number}"
+        requests.get(f'https://api.callmebot.com/whatsapp.php?phone=263782210526&text={msg}&apikey=6174367')
 #         db = DB('fingerprints.db');
 #         for phone_number in db.get_phone_numbers():
 #             send_message(phone_number, msg)

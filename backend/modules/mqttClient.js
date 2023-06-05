@@ -7,22 +7,22 @@ const mqttClient = mqtt.connect('mqtt://127.0.0.1');
 
 mqttClient.on('connect', async()=>{
     console.log("Connected to an MQTT broker");
-    mqttClient.subscribe("fingerprint_id/#");
+    mqttClient.subscribe("fingerprint_id");
     mqttClient.subscribe("recognise_face");
 });
 
 
 mqttClient.on('message', async (topic, message)=>{
-    if(topic.split('/')[0] === "fingerprint_id"){
-        const { driver_id, fingerprint_id, license_plate_number } = JSON.parse(message.toString());
+    if(topic === "fingerprint_id"){
+        const { driver_id, fingerprint_id, licence_plate_number } = JSON.parse(message.toString());
 
-        const vehicle = await Vehicle.findVehicleByPlateNumber(license_plate_number);
+        const vehicle = await Vehicle.findVehicleByPlateNumber(licence_plate_number);
         // const vehicle = await Vehicle.updateFingerprintId(license_plate_number, driver_id, fingerprint_id);
         await vehicle.updateFingerprintId(driver_id, fingerprint_id)
         console.log(vehicle);
         console.log(`Driver Id: ${driver_id}`);
         console.log(`Fingerprint ID: ${fingerprint_id}`);
-        console.log(`License Plate Number: ${license_plate_number}`);
+        console.log(`License Plate Number: ${licence_plate_number}`);
     }
 
     if(topic === "recognise_face"){

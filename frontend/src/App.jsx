@@ -12,6 +12,7 @@ import AuthorisedDrivers, {loader as authorised_drivers_loader, action as author
 import DashboardIndex, {loader as dashboardLoader} from './components/DashboardIndex';
 import AuthorisedVehicles, {loader as authorised_vehicles_loader, action as authorised_vehicles_action} from './pages/AuthorisedVehicles';
 import ImageUpload, { action as imageUploadAction } from './pages/ImageUpload';
+import Gallery, { loader as galleryLoader } from './pages/Gallery';
 
 export default function App(){
 
@@ -63,6 +64,15 @@ export default function App(){
                             ),    
                             action: vehicleRegistrationAction,
                             loader: vehicleRegistrationLoader,
+                        },
+                        {
+                            path: 'gallery',
+                            element: (
+                                <ProtectedRoute>
+                                    <Gallery />
+                                </ProtectedRoute>
+                            ),
+                            loader: galleryLoader
                         },
                         {
                             path: "authorised_drivers/:licence_plate_number",

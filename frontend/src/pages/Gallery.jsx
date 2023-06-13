@@ -1,16 +1,20 @@
-import { useLoaderData } from "react-router-dom";
-import { Card, Box, Grid, Typography } from "@mui/material";
+import axios from 'axios';
+import { useLoaderData, Link } from "react-router-dom";
+import { Card, Box, Grid, Typography, CardContent, CardActions, Button } from "@mui/material";
+
+const link_style = {
+    textDecoration: "none",
+    color: "inherit"
+}
+
 export default function Gallery(){
     const { data, status } = useLoaderData();
     const cars = status === 200 ? data : null;
 
     return (cars.length > 0 ? <Grid container spacing={2}>
-        <Grid item xs={3}>
-            { cars.map(car =>(
-                <VehicleCard car={car} />
-            ))}
-        </Grid>
-        
+        {cars.map(car =>(
+            <VehicleCard car={car} />
+        ))}        
     </Grid> :
     <Box sx={{margin :"auto"}}>
         <Typography variant="h3">You have no registered nor authorised vehicles</Typography>
@@ -19,13 +23,52 @@ export default function Gallery(){
 
 }
 
-function VehicleCard(car){
-    return <Card maxWidth="350px">
-        <Typography variant="h6">{`${car.make} ${car.model}`}</Typography>
+function VehicleCard({car}){
+    const {make, model, licence_plate_number} = car;
+    return <Grid item xs={3}>
+    <Card sx={{maxWidth:"300px"}}>
+        <CardContent>
+            <Typography variant="h6" component="h6">{make}</Typography>
+            <Typography variant="subtitle1" component="p">{model}</Typography>
+            <Typography variant="body2" component="p">Licence Plate Number: {licence_plate_number}</Typography>
+        </CardContent>
+        <CardActions>
+                <Button size="small" name="view-images">
+                    <Link style={link_style} to={`images/${licence_plate_number}`}>
+                        View Images
+                    </Link>
+                </Button>
+        </CardActions>
     </Card>
+</Grid>
 }
 
-function Image(){
+
+export function Images({car}){
+    const { data, status } = useLoaderData();
+    const images = status === 200 ? data : null;
+
+    return<Box>
+        <Typography variant="h4" component="h4">{car.make} {Car.model} {car.licence_plate_number}</Typography>
+        {
+            images ? (
+                <Grid container spacing={2}>
+                    {
+                        images.map(image => (
+                            <Image src={image.src} />
+                        ))
+                    }
+                </Grid>
+            ):
+            <Box sx={{margin :"auto"}}>
+                <Typography variant="h3">No images captured in this vehicle</Typography>
+            </Box>
+        }
+    </Box> 
+}
+
+
+function Image({src}){
 
 }
 
@@ -54,4 +97,10 @@ export async function loader(){
           }
     }
     return response;
+}
+
+
+export async function imagesLoader(){
+    
+    return null;
 }

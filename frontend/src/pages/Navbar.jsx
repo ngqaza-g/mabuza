@@ -30,7 +30,7 @@ const nav_items = [
     <Link style={link_style} to="/dashboard">
         Dashboard
     </Link>,
-    <Link style={link_style} to="/gallery">
+    <Link style={link_style} to="gallery">
         Gallery
     </Link>,
     <Link style={link_style} to="register_vehicle">

@@ -1,6 +1,7 @@
 const mqtt = require('mqtt');
 const Vehicle = require('../models/Vehicle');
-const recogniseFace = require('./recognise_face');
+// const recogniseFace = require('./recognise_face');
+const fs = require('fs');
 
 const mqttClient = mqtt.connect('mqtt://127.0.0.1');
 
@@ -24,17 +25,33 @@ mqttClient.on('message', async (topic, message)=>{
         console.log(`Fingerprint ID: ${fingerprint_id}`);
         console.log(`License Plate Number: ${licence_plate_number}`);
     }
-
-    if(topic === "recognise_face"){
-        const { image, driver_id, license_plate_number } = JSON.parse(message.toString());
-        // console.log(image);
-        const result = await recogniseFace(image);
-        console.log(result);
-
-        label = result._label;
-
-        mqttClient.publish(`face_recognised/${license_plate_number}`, JSON.stringify({isFaceVallid : label === driver_id}))
+    
+    if(topic === "image"){
+        const { image, licence_plate_number } = JSON.parse(message.toString());
+        const imageData = Buffer.from(image, 'base64');
+        let filepath = path.join(__dirname, `../images/${licence_plate_number}`);
+        if(!fs.existsSync(dest)) fs.mkdirSync(filepath);
+        const filename = `${Date.now()}.jpg`;
+        filepath = path.join(filepath, filename);
+        fs.writeFile(filepath, imageData, (err) => {
+            if (err) {
+              console.error(err);
+            } else {
+              console.log(`Saved image to ${filepath}`);
+            }
+          });
     }
+
+    // if(topic === "recognise_face"){
+    //     const { image, driver_id, license_plate_number } = JSON.parse(message.toString());
+    //     // console.log(image);
+    //     const result = await recogniseFace(image);
+    //     console.log(result);
+
+    //     label = result._label;
+
+    //     mqttClient.publish(`face_recognised/${license_plate_number}`, JSON.stringify({isFaceVallid : label === driver_id}))
+    // }
 })
 
 

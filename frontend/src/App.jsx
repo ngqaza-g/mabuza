@@ -12,7 +12,7 @@ import AuthorisedDrivers, {loader as authorised_drivers_loader, action as author
 import DashboardIndex, {loader as dashboardLoader} from './components/DashboardIndex';
 import AuthorisedVehicles, {loader as authorised_vehicles_loader, action as authorised_vehicles_action} from './pages/AuthorisedVehicles';
 import ImageUpload, { action as imageUploadAction } from './pages/ImageUpload';
-import Gallery, { loader as galleryLoader }, imagesLoader, Images from './pages/Gallery';
+import Gallery, { loader as galleryLoader , imagesLoader, Images} from './pages/Gallery';
 
 export default function App(){
 
@@ -67,12 +67,16 @@ export default function App(){
                         },
                         {
                             path: 'gallery',
-                            element: (
-                                <ProtectedRoute>
-                                    <Gallery />
-                                </ProtectedRoute>
-                            ),
                             children:[
+                                {
+                                    index: true,
+                                    element: (
+                                        <ProtectedRoute>
+                                            <Gallery />
+                                        </ProtectedRoute>
+                                    ),
+                                    loader: galleryLoader
+                                },
                                 {
                                     path: 'images/:licence_plate_number',
                                     element: (
@@ -82,8 +86,7 @@ export default function App(){
                                     ),
                                     loader: imagesLoader
                                 }
-                            ],
-                            loader: galleryLoader
+                            ]
                         },
                         {
                             path: "authorised_drivers/:licence_plate_number",

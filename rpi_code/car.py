@@ -24,8 +24,8 @@ class Car:
         self.seat_button = Button(17, hold_time=2)
         self.start_button = Button(27)
         self.panic_button = Button(22)
-#         self.servo = AngularServo(18, min_pulse_width=0.0006, max_pulse_width=0.0023)
-#         self.servo.angle = -90
+        self.servo = AngularServo(18, min_pulse_width=0.0006, max_pulse_width=0.0023)
+        self.servo.angle = -90
         self.seat_button.when_held = self.set_driver
         self.seat_button.when_released = self.reset_driver
         self.start_button.when_pressed = self.start_car
@@ -86,7 +86,7 @@ class Car:
             self.driveModeOn = False
             self.driveLed.off()
             self.engineLed.off()
-            db = DB('fingerprits.db')
+            db = DB('fingerprints.db')
             driver = db.get_driver(self.driver_id)
             if(driver):
                 name, username = driver
@@ -94,7 +94,7 @@ class Car:
                 db.close()
             self.driver_id = None
             print("Engine Stopped")
-#             self.servo.angle = -90
+            self.servo.angle = -90
             self.lcd.clear()
             self.lcd.text("Engine ", 1)
             self.lcd.text("Stopped", 2)
@@ -106,14 +106,14 @@ class Car:
                 self.engineLed.on()
                 self.driveLed.on()
                 self.driveModeOn = True
-                db = DB('fingerprits.db')
+                db = DB('fingerprints.db')
                 driver = db.get_driver(self.driver_id)
                 if(driver):
                     name, username = driver
                     self.mqttClient.publish(f'current_driver/{self.licence_plate_number}', json.dumps({"name": name, "username": username, state: "Driving"}))
                 db.close()
                 print("Car Started")
-#                 self.servo.angle = 90
+                self.servo.angle = 90
                 self.lcd.clear()
                 self.lcd.text("Car Started", 1)
         else:

@@ -1,4 +1,4 @@
-const FaceDescriptor = require('../../models/FaceDescriptor');
+// const FaceDescriptor = require('../../models/FaceDescriptor');
 const User = require('../../models/User');
 
 const login = async (req, res)=>{
@@ -21,10 +21,10 @@ const login = async (req, res)=>{
             const isPasswordCorrect = await user.checkPassword(password) 
             if(isPasswordCorrect){
                 const token = await user.getToken();
-                const face_model = await FaceDescriptor.findByUserId(user._id);
+                // const face_model = await FaceDescriptor.findByUserId(user._id);
 
-                console.log(face_model);
-                res.cookie('token', token, {maxAge: (7 * 24 * 60 * 60 * 1000), httpOnly: true } ).json({user: {id: user._id, name: user.name, username: user.username, email: user.email, phone_number: user.phone_number, role: user.role, face_model_available: (face_model ? true : false)}});
+                // console.log(face_model);
+                res.cookie('token', token, {maxAge: (7 * 24 * 60 * 60 * 1000), httpOnly: true } ).json({user: {id: user._id, name: user.name, username: user.username, email: user.email, phone_number: user.phone_number, role: user.role}});
             }else{
                 res.status(400).json({error: "Incorrect Password"});
             }

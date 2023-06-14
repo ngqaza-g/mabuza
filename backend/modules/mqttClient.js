@@ -1,6 +1,5 @@
 const mqtt = require('mqtt');
 const Vehicle = require('../models/Vehicle');
-// const recogniseFace = require('./recognise_face');
 const fs = require('fs');
 
 const mqttClient = mqtt.connect('mqtt://127.0.0.1');
@@ -29,7 +28,7 @@ mqttClient.on('message', async (topic, message)=>{
     if(topic === "image"){
         const { image, licence_plate_number } = JSON.parse(message.toString());
         const imageData = Buffer.from(image, 'base64');
-        let filepath = path.join(__dirname, `../images/${licence_plate_number}`);
+        let filepath = path.join(__dirname, `../public/images/${licence_plate_number}`);
         if(!fs.existsSync(dest)) fs.mkdirSync(filepath);
         const filename = `${Date.now()}.jpg`;
         filepath = path.join(filepath, filename);

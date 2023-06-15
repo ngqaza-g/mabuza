@@ -7,7 +7,7 @@ async function get_images(req, res){
     const vehicle = await Vehicle.findVehicleByPlateNumber(licence_plate_number);
 
     const base_dir = path.join(__dirname, `../../public/images/${licence_plate_number}`);
-    let images = fs.readdirSync(base_dir);
+    let images = fs.existsSync(base_dir) ? fs.readdirSync(base_dir) : [];
 
     images = images.map(image => `/images/${licence_plate_number}/${image}`);
 

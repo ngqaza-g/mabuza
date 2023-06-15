@@ -63,7 +63,7 @@ export function Images(){
     return <Box>
         <Typography sx={{textAlign: "center"}} variant="h3" component="h4">{vehicle.make} {vehicle.model} {vehicle.licence_plate_number}</Typography>
         {
-            images ? (
+            images.length > 0 ? (
                 <ImageList cols={3}>
                     {images.map((image, index)=> (
                         <Button data-index={index} onClick={openImage}>

@@ -8,6 +8,7 @@ from rpi_lcd import LCD
 import time
 import requests
 import os
+import json
 
 class Car:
     def __init__(self, mqttClient, fingerprint, get_coords, licence_plate_number):
@@ -90,7 +91,7 @@ class Car:
             driver = db.get_driver(self.driver_id)
             if(driver):
                 name, username = driver
-                self.mqttClient.publish(f'current_driver/{self.licence_plate_number}', json.dumps({"name": name, "username": username, state: "Parked"}))
+                self.mqttClient.publish(f'current_driver/{self.licence_plate_number}', json.dumps({"name": name, "username": username, "state": "Parked"}))
                 db.close()
             self.driver_id = None
             print("Engine Stopped")
@@ -110,7 +111,7 @@ class Car:
                 driver = db.get_driver(self.driver_id)
                 if(driver):
                     name, username = driver
-                    self.mqttClient.publish(f'current_driver/{self.licence_plate_number}', json.dumps({"name": name, "username": username, state: "Driving"}))
+                    self.mqttClient.publish(f'current_driver/{self.licence_plate_number}', json.dumps({"name": name, "username": username, "state": "Driving"}))
                 db.close()
                 print("Car Started")
                 self.servo.angle = 90
@@ -145,6 +146,14 @@ class Car:
         msg = f"Help I am in an emergence.\nHere is my location http://maps.google.com/maps?q={latitude},{longitude}"
         msg += f"\nLicence Plate: {self.licence_plate_number}"
         requests.get(f'https://api.callmebot.com/whatsapp.php?phone=263782210526&text={msg}&apikey=6174367')
+        print("Stopping the engine")
+        self.lcd.clear()
+        self.lcd.text("Stopping the", 1)
+        self.lcd.text("Engine", 2)
+        self.isEngineRunning = False
+        self.driveModeOn = False
+        self.driveLed.off()
+        self.engineLed.off()
 #         db = DB('fingerprints.db');
 #         for phone_number in db.get_phone_numbers():
 #             send_message(phone_number, msg)

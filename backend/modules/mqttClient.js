@@ -1,6 +1,7 @@
 const mqtt = require('mqtt');
 const Vehicle = require('../models/Vehicle');
 const fs = require('fs');
+const path = require('path');
 
 const mqttClient = mqtt.connect('mqtt://127.0.0.1');
 
@@ -8,7 +9,7 @@ const mqttClient = mqtt.connect('mqtt://127.0.0.1');
 mqttClient.on('connect', async()=>{
     console.log("Connected to an MQTT broker");
     mqttClient.subscribe("fingerprint_id");
-    mqttClient.subscribe("recognise_face");
+    mqttClient.subscribe("image");
 });
 
 
@@ -29,7 +30,7 @@ mqttClient.on('message', async (topic, message)=>{
         const { image, licence_plate_number } = JSON.parse(message.toString());
         const imageData = Buffer.from(image, 'base64');
         let filepath = path.join(__dirname, `../public/images/${licence_plate_number}`);
-        if(!fs.existsSync(dest)) fs.mkdirSync(filepath);
+        if(!fs.existsSync(filepath)) fs.mkdirSync(filepath);
         const filename = `${Date.now()}.jpg`;
         filepath = path.join(filepath, filename);
         fs.writeFile(filepath, imageData, (err) => {

@@ -39,10 +39,11 @@ def on_message(client, userdata, msg):
         username = message["username"]
         location = fingerprint.enroll_finger()
         print(location)
-        db = DB("fingerprints.db")
-        db.add_fingerprint(name, username, driver_id, location, phone_number)
-        db.close()
-        client.publish('fingerprint_id', json.dumps({"fingerprint_id" : location, "driver_id": driver_id, "licence_plate_number": LICENCE_PLATE_NUMBER}))
+        if(location):
+            db = DB("fingerprints.db")
+            db.add_fingerprint(name, username, driver_id, location, phone_number)
+            db.close()
+            client.publish('fingerprint_id', json.dumps({"fingerprint_id" : location, "driver_id": driver_id, "licence_plate_number": LICENCE_PLATE_NUMBER}))
 
 client = mqtt.Client()
 client.on_connect = on_connect
